@@ -1,13 +1,19 @@
-import { Flex } from "@radix-ui/themes"
-import { MyGraph } from "./components/Graph/MyGraph"
+import { Flex, MantineProvider, createTheme } from "@mantine/core"
+import { Graph } from "./components/Graph/Graph"
 import { LayersMenu } from "./components/LayersMenu/LayersMenu"
+
+const theme = createTheme({
+  primaryColor: "indigo",
+})
 
 function App() {
   return (
-    <Flex justify="between" width="100%" height="100%" p="6" gapX="9">
-      <MyGraph layers={[1, 2, 3, 4, 1, 2]} />
-      <LayersMenu />
-    </Flex>
+    <MantineProvider theme={theme} defaultColorScheme="dark">
+      <Flex justify="between" align="center" w="100%" h="100%" p={30} columnGap={50}>
+        <Graph />
+        <LayersMenu />
+      </Flex>
+    </MantineProvider>
   )
 }
 

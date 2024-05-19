@@ -1,48 +1,24 @@
-import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons"
-import { Badge, Box, Flex, IconButton, Text } from "@radix-ui/themes"
-import { useAtomValue } from "jotai"
-import { layersAtom, useUpdateLayers } from "../../hooks/useUpdateLayers"
-import type { Layer } from "../../types/types"
-import { ActivationFunctions } from "../ActivationFunctions/ActivationFunction"
+import { Badge, Box, Flex } from "@mantine/core"
+import { useRef } from "react"
+import type { Layer as LayerType } from "../../types/types"
+import { OtherLayerParams } from "./OtherLayerParams"
 
 type Props = {
-  layer: Layer
+  layer: LayerType
+  layerIndex: number
 }
 
-export function Layer({ layer }: Props) {
-  const { addNode, removeNode } = useUpdateLayers()
-  const layers = useAtomValue(layersAtom)
-
-  const layerIndex = layers.findIndex(
-    (otherLayer) => otherLayer.id === layer.id
-  )
+export function Layer({ layer, layerIndex }: Props) {
+  const layersRef = useRef<HTMLDivElement>(null)
 
   return (
-    <Flex>
-      <Box width="100px">
-        <Badge style={{ width: "fit-content" }}>Layer {layerIndex + 1}</Badge>
+    <Flex ref={layersRef} align="center" pos="relative">
+      <Box w={100}>
+        <Badge radius="sm" variant="light" w="fit-content">
+          Layer {layerIndex + 1}
+        </Badge>
       </Box>
-      <Flex gapX="6">
-        <ActivationFunctions layer={layer} />
-        <Flex align="center">
-          <Text weight="bold" align="right" mr="2" style={{ width: "20px" }}>
-            {layer.nodes.length}
-          </Text>
-
-          <Flex direction="column">
-            <IconButton onClick={() => addNode(layer)} variant="ghost" size="1">
-              <ChevronUpIcon />
-            </IconButton>
-            <IconButton
-              onClick={() => removeNode(layer)}
-              variant="ghost"
-              size="1"
-            >
-              <ChevronDownIcon />
-            </IconButton>
-          </Flex>
-        </Flex>
-      </Flex>
+      <OtherLayerParams layer={layer} />
     </Flex>
   )
 }

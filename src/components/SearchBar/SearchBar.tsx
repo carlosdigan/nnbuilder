@@ -1,5 +1,5 @@
-import { MagnifyingGlassIcon } from "@radix-ui/react-icons"
-import { TextField } from "@radix-ui/themes"
+import { TextInput } from "@mantine/core"
+import { IconSearch } from "@tabler/icons-react"
 import { scrollBarPadding } from "../Layers/Layers"
 
 type Props = {
@@ -8,14 +8,11 @@ type Props = {
 
 export function SearchBar({ setSearch }: Props) {
   return (
-    <TextField.Root
-      style={{ width: `calc(100% - ${scrollBarPadding}px)` }}
+    <TextInput
+      style={{ width: `calc(345px - ${scrollBarPadding}px)` }}
       placeholder="Search layer number…"
       onChange={(e) => setSearch(e.target.value)}
-    >
-      <TextField.Slot>
-        <MagnifyingGlassIcon height="16" width="16" />
-      </TextField.Slot>
-    </TextField.Root>
+      leftSection={<IconSearch size={16}/>}
+    />
   )
 }

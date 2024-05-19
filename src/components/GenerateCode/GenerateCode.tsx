@@ -1,5 +1,6 @@
-import { CodeIcon } from "@radix-ui/react-icons"
-import { Box, Dialog, IconButton, Tabs, Tooltip } from "@radix-ui/themes"
+import { ActionIcon, Modal, Tabs, Tooltip } from "@mantine/core"
+import { useDisclosure } from "@mantine/hooks"
+import { IconCode } from "@tabler/icons-react"
 import { PythonTensorflowCode } from "./PythonTensorflowCode"
 
 type Props = {
@@ -7,38 +8,39 @@ type Props = {
 }
 
 export function GenerateCode({ numLayers }: Props) {
-  return (
-    <Dialog.Root>
-      <Dialog.Trigger>
-        <Box>
-          {numLayers < 2 ? (
-            <Tooltip content="Must have at least 2 layers">
-              <IconButton variant="ghost" disabled={true}>
-                <CodeIcon width="25px" height="25px" />
-              </IconButton>
-            </Tooltip>
-          ) : (
-            <IconButton variant="ghost">
-              <CodeIcon width="25px" height="25px" />
-            </IconButton>
-          )}
-        </Box>
-      </Dialog.Trigger>
+  const [opened, { open, close }] = useDisclosure()
 
-      <Dialog.Content maxWidth="60%">
-        <Tabs.Root defaultValue="python-tensorflow">
+  return (
+    <>
+      <Modal
+        opened={opened}
+        onClose={close}
+        size="auto"
+        centered
+        styles={{ header: { height: 0 } }}
+        withCloseButton={false}
+      >
+        <Tabs defaultValue="python-tensorflow">
           <Tabs.List>
-            <Tabs.Trigger value="python-tensorflow">
-              Python Tensorflow
-            </Tabs.Trigger>
+            <Tabs.Tab value="python-tensorflow">Python Tensorflow</Tabs.Tab>
           </Tabs.List>
-          <Box>
-            <Tabs.Content value="python-tensorflow">
-              <PythonTensorflowCode />
-            </Tabs.Content>
-          </Box>
-        </Tabs.Root>
-      </Dialog.Content>
-    </Dialog.Root>
+
+          <Tabs.Panel value="python-tensorflow">
+            <PythonTensorflowCode />
+          </Tabs.Panel>
+        </Tabs>
+      </Modal>
+      {numLayers < 2 ? (
+        <Tooltip label="Must have at least 2 layers" withArrow>
+          <ActionIcon variant="subtle" disabled>
+            <IconCode />
+          </ActionIcon>
+        </Tooltip>
+      ) : (
+        <ActionIcon variant="subtle" onClick={open}>
+          <IconCode />
+        </ActionIcon>
+      )}
+    </>
   )
 }

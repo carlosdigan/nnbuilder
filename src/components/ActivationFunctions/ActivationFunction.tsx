@@ -1,5 +1,6 @@
-import { Select } from "@radix-ui/themes"
-import { useAtom } from "jotai"
+import { Combobox, Input, InputBase, useCombobox } from "@mantine/core"
+import { useSetAtom } from "jotai"
+import { useState } from "react"
 import { layersAtom } from "../../hooks/useUpdateLayers"
 import { ActivationFunction, Layer } from "../../types/types"
 import { activationFunctions } from "../../utils/constants"
@@ -9,34 +10,55 @@ type Props = {
 }
 
 export function ActivationFunctions({ layer }: Props) {
-  const [layers, setLayers] = useAtom(layersAtom)
+  const combobox = useCombobox({
+    onDropdownClose: () => combobox.resetSelectedOption(),
+  })
+
+  const [activationFunction, setActivationFunction] = useState<ActivationFunction>(activationFunctions[0])
+  const setLayers = useSetAtom(layersAtom)
+
+  const options = activationFunctions.map((activationFunction) => (
+    <Combobox.Option value={activationFunction} key={activationFunction}>
+      {activationFunction}
+    </Combobox.Option>
+  ))
+
   return (
-    <Select.Root
-      defaultValue="linear"
-      onValueChange={(newActivationFunction: ActivationFunction) => {
-        const layerIndex = layers.findIndex(
-          (otherLayer) => otherLayer.id === layer.id
-        )
-        const newLayer: Layer = {
-          ...layer,
-          activationFunction: newActivationFunction,
-        }
-        const newLayers = [...layers]
-        newLayers[layerIndex] = newLayer
-        setLayers(newLayers)
+    <Combobox
+      store={combobox}
+      onOptionSubmit={(newActivationFunction: string) => {
+        setActivationFunction(newActivationFunction as ActivationFunction)
+        setLayers((layers) => {
+          const layerIndex = layers.findIndex((otherLayer) => otherLayer.id === layer.id)
+          const newLayer: Layer = {
+            ...layer,
+            activationFunction: newActivationFunction as ActivationFunction,
+          }
+          const newLayers = [...layers]
+          newLayers[layerIndex] = newLayer
+          return newLayers
+        })
+        combobox.closeDropdown()
       }}
+      keepMounted={false}
     >
-      <Select.Trigger variant="surface" style={{ width: 115 }} />
-      <Select.Content>
-        <Select.Group>
-          <Select.Label>Activation Function</Select.Label>
-          {activationFunctions.map((activationFunction) => (
-            <Select.Item key={activationFunction} value={activationFunction}>
-              {activationFunction}
-            </Select.Item>
-          ))}
-        </Select.Group>
-      </Select.Content>
-    </Select.Root>
+      <Combobox.Target>
+        <InputBase
+          w="115px"
+          component="button"
+          type="button"
+          pointer
+          rightSection={<Combobox.Chevron />}
+          rightSectionPointerEvents="none"
+          onClick={() => combobox.toggleDropdown()}
+        >
+          {activationFunction || <Input.Placeholder>Pick value</Input.Placeholder>}
+        </InputBase>
+      </Combobox.Target>
+
+      <Combobox.Dropdown>
+        <Combobox.Options>{options}</Combobox.Options>
+      </Combobox.Dropdown>
+    </Combobox>
   )
 }

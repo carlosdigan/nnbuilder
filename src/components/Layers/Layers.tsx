@@ -1,4 +1,4 @@
-import { Flex, ScrollArea } from "@radix-ui/themes"
+import { ScrollArea, Flex } from "@mantine/core"
 import { useAtomValue } from "jotai"
 import { useMemo } from "react"
 import { layersAtom } from "../../hooks/useUpdateLayers"
@@ -27,6 +27,7 @@ export const scrollBarPadding = 10
 
 export function Layers({ search }: Props) {
   const layers = useAtomValue(layersAtom)
+
   const filteredLayers = useMemo(() => {
     const searchLayerNumber = parseLayerNumber(search)
 
@@ -43,12 +44,23 @@ export function Layers({ search }: Props) {
   return (
     <ScrollArea
       type="auto"
-      scrollbars="vertical"
-      style={{ paddingRight: scrollBarPadding }}
+      scrollbars="y"
+      scrollbarSize={6}
+      h="100%"
+      styles={{
+        scrollbar: {
+          background: "rgba(221, 234, 248, 0.08)",
+          borderRadius: 12,
+          padding: 0,
+        },
+        thumb: {
+          background: "rgba(217, 237, 255, 0.365)",
+        },
+      }}
     >
-      <Flex gapY="4"pb="4" direction="column">
-        {filteredLayers.map((layer) => (
-          <Layer key={layer.id} layer={layer} />
+      <Flex rowGap={20} direction="column">
+        {filteredLayers.map((layer, layerIndex) => (
+          <Layer key={layer.id} layer={layer} layerIndex={layerIndex} />
         ))}
       </Flex>
     </ScrollArea>
