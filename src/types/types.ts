@@ -5,7 +5,7 @@ export type ActivationFunction = (typeof activationFunctions)[number]
 
 export type Layer = {
   id: string
-  nodes: number
+  nodes: string[]
   activationFunction: ActivationFunction
 }
 

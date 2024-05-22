@@ -1,24 +1,34 @@
-import { Badge, Box, Flex } from "@mantine/core"
-import { useRef } from "react"
+import { Flex } from "@mantine/core"
+import { memo, useRef } from "react"
 import type { Layer as LayerType } from "../../types/types"
-import { OtherLayerParams } from "./OtherLayerParams"
+import { LayerActivationFunction } from "./LayerActivationFunction"
+import { LayerBadge } from "./LayerBadge"
+import { LayerNodes } from "./LayerNodes"
 
 type Props = {
   layer: LayerType
   layerIndex: number
 }
 
-export function Layer({ layer, layerIndex }: Props) {
+export const Layer = memo(function Layer({ layer, layerIndex }: Props) {
   const layersRef = useRef<HTMLDivElement>(null)
 
   return (
     <Flex ref={layersRef} align="center" pos="relative">
-      <Box w={100}>
-        <Badge radius="sm" variant="light" w="fit-content">
-          Layer {layerIndex + 1}
-        </Badge>
-      </Box>
-      <OtherLayerParams layer={layer} />
+      <LayerBadge layerIndex={layerIndex} />
+      <Flex columnGap={28}>
+        <LayerActivationFunction layer={layer} />
+        <LayerNodes layer={layer} />
+      </Flex>
     </Flex>
+  )
+}, arePropsEqual)
+
+function arePropsEqual(oldProps: Props, newProps: Props) {
+  return (
+    oldProps.layerIndex === newProps.layerIndex &&
+    oldProps.layer.activationFunction === newProps.layer.activationFunction &&
+    oldProps.layer.id === newProps.layer.id &&
+    oldProps.layer.nodes.length === newProps.layer.nodes.length
   )
 }

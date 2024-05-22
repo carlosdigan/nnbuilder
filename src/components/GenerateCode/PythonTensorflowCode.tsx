@@ -15,10 +15,10 @@ export function PythonTensorflowCode() {
   const layers = useAtomValue(layersAtom)
   const { learningRate, lossFunction, optimizer } = useAtomValue(hyperParametersAtom)
   let layersCode = "\t"
-  layersCode += inputLayer(layers[0].nodes, layers[0].activationFunction)
+  layersCode += inputLayer(layers[0].nodes.length, layers[0].activationFunction)
   layers
     .slice(1, layers.length)
-    .forEach((layer) => (layersCode += "\n\t" + regularLayer(layer.nodes, layer.activationFunction)))
+    .forEach((layer) => (layersCode += "\n\t" + regularLayer(layer.nodes.length, layer.activationFunction)))
 
   const code = `import tensorflow as tf
 from tensorflow.keras.optimizers import ${optimizer}
@@ -35,7 +35,6 @@ model.compile(optimizer=${optimizer}(learning_rate=${learningRate}), loss=${loss
       type="auto"
       scrollbars="y"
       scrollbarSize={6}
-      h="70vh"
       styles={{
         scrollbar: {
           background: "rgba(221, 234, 248, 0.08)",
@@ -50,7 +49,7 @@ model.compile(optimizer=${optimizer}(learning_rate=${learningRate}), loss=${loss
         },
       }}
     >
-      <Box>
+      <Box mah="70vh">
         <CodeHighlight code={code} language="python" styles={{ copy: { position: "absolute", right: 15, background: "none" } }}/>
       </Box>
     </ScrollArea>

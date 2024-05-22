@@ -9,7 +9,7 @@ export function useUpdateLayers() {
 
   const addNode = (layer: Layer) => {
     setLayers((layers) => {
-      const newLayer = { ...layer, nodes: layer.nodes + 1 }
+      const newLayer = { ...layer, nodes: [...layer.nodes, v4()] }
 
       const newLayers = [...layers]
       const layerIndex = layers.findIndex((otherLayer) => otherLayer.id === layer.id)
@@ -21,12 +21,12 @@ export function useUpdateLayers() {
   const removeNode = (layer: Layer) => {
     setLayers((layers) => {
       const layerIndex = layers.findIndex((otherLayer) => otherLayer.id === layer.id)
-      const newLayer = {
+      const newLayer: Layer = {
         ...layer,
-        nodes: layer.nodes - 1,
+        nodes: layer.nodes.slice(0, layer.nodes.length - 1),
       }
       const newLayers = [...layers]
-      if (newLayer.nodes) {
+      if (newLayer.nodes.length) {
         newLayers[layerIndex] = newLayer
       } else {
         newLayers.splice(layerIndex, 1)
@@ -37,7 +37,7 @@ export function useUpdateLayers() {
 
   const addLayer = () => {
     setLayers((layers) => {
-      const newLayers: Layer[] = [...layers, { id: v4(), activationFunction: "linear", nodes: 1 }]
+      const newLayers: Layer[] = [...layers, { id: v4(), activationFunction: "linear", nodes: [v4()] }]
       return newLayers
     })
   }

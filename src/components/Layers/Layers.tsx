@@ -1,4 +1,5 @@
-import { ScrollArea, Flex } from "@mantine/core"
+import { useAutoAnimate } from "@formkit/auto-animate/react"
+import { Flex, ScrollArea } from "@mantine/core"
 import { useAtomValue } from "jotai"
 import { useMemo } from "react"
 import { layersAtom } from "../../hooks/useUpdateLayers"
@@ -41,6 +42,8 @@ export function Layers({ search }: Props) {
     return []
   }, [layers, search])
 
+  const [animationParent] = useAutoAnimate({ duration: 100 })
+
   return (
     <ScrollArea
       type="auto"
@@ -58,7 +61,7 @@ export function Layers({ search }: Props) {
         },
       }}
     >
-      <Flex rowGap={20} direction="column">
+      <Flex rowGap={20} direction="column" ref={animationParent}>
         {filteredLayers.map((layer, layerIndex) => (
           <Layer key={layer.id} layer={layer} layerIndex={layerIndex} />
         ))}
