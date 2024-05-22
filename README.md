@@ -1,6 +1,8 @@
 # NN Builder
 
-This project allows you to build a neural network and comes with a 2D/3D visualizer of your neural network that you can interact with
+This project allows you to build a neural network and comes with a 2D/3D visualizer of your neural network that you can interact with.
+
+The app can be viewed live at: https://nnbuilder.vercel.app/
 
 ## Screenshots
 ![2D](./screenshots/2d.png)
